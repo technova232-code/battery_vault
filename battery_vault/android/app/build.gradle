@@ -51,6 +51,7 @@ android {
     }
 
     defaultConfig {
+        manifestPlaceholders = [applicationName: "io.flutter.app.FlutterApplication"]
         applicationId "com.technova.battery_vault"
         minSdkVersion 21
         targetSdkVersion 34
