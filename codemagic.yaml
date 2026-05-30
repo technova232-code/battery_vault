@@ -59,7 +59,7 @@ workflows:
       - name: Generate localizations
         script: cd battery_vault && flutter gen-l10n
 
-      - name: Fix compileSdkVersion
+      - name: Fix compileSdkVersion (disabled)
         script: |
           sed -i 's/compileSdkVersion 34/compileSdkVersion 36/g' battery_vault/android/app/build.gradle
           sed -i 's/targetSdkVersion 34/targetSdkVersion 36/g' battery_vault/android/app/build.gradle
