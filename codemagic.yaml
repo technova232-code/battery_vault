@@ -9,7 +9,13 @@ workflows:
         - battery_vault_keystore
       vars:
         PACKAGE_NAME: "com.technova.battery_vault"
-        UNITY_GAME_ID: "YOUR_UNITY_GAME_ID"
+        UNITY_GAME_ID: "800001883"
+
+    cache:
+      cache_paths:
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
+        - ~/.pub-cache
 
     triggering:
       events:
@@ -28,24 +34,39 @@ workflows:
 
       - name: Set up key.properties
         script: |
-          cat >> "$CM_BUILD_DIR/battery_vault/android/key.properties" <<KEYEOF
+          cat > "$CM_BUILD_DIR/battery_vault/android/key.properties" <<KEYEOF
           storePassword=$CM_KEYSTORE_PASSWORD
           keyPassword=$CM_KEY_PASSWORD
           keyAlias=$CM_KEY_ALIAS
           storeFile=$CM_KEYSTORE_PATH
           KEYEOF
 
-      - name: Get Flutter packages
+      - name: Set up Gradle
         script: |
-          cd battery_vault && flutter pub get
+          mkdir -p ~/.gradle
+          cat > ~/.gradle/gradle.properties << GRADLEEOF
+          org.gradle.daemon=false
+          org.gradle.parallel=true
+          org.gradle.caching=true
+          org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=2g
+          android.useAndroidX=true
+          android.enableJetifier=true
+          GRADLEEOF
+
+      - name: Get Flutter packages
+        script: cd battery_vault && flutter pub get
 
       - name: Generate localizations
+        script: cd battery_vault && flutter gen-l10n
+
+      - name: Fix compileSdkVersion
         script: |
-          cd battery_vault && flutter gen-l10n
+          sed -i 's/compileSdkVersion 34/compileSdkVersion 36/g' battery_vault/android/app/build.gradle
+          sed -i 's/targetSdkVersion 34/targetSdkVersion 36/g' battery_vault/android/app/build.gradle
 
       - name: Build APK Release
         script: |
-          cd battery_vault && flutter build apk --release --split-per-abi
+          cd battery_vault && flutter build apk --release --split-per-abi --no-tree-shake-icons
 
     artifacts:
       - battery_vault/build/app/outputs/flutter-apk/*.apk
