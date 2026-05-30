@@ -33,3 +33,4 @@ lib/l10n/app_localizations_*.dart
 
 # Assets (icon will be committed)
 # assets/fonts/  <- commit fonts
+!lib/l10n/app_localizations*.dart
