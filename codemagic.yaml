@@ -21,13 +21,14 @@ workflows:
     scripts:
       - name: Set up local.properties
         script: |
-          echo "flutter.sdk=$FLUTTER_ROOT" > "$CM_BUILD_DIR/android/local.properties"
-          echo "flutter.versionName=1.0.0" >> "$CM_BUILD_DIR/android/local.properties"
-          echo "flutter.versionCode=1" >> "$CM_BUILD_DIR/android/local.properties"
+          mkdir -p "$CM_BUILD_DIR/battery_vault/android"
+          echo "flutter.sdk=$FLUTTER_ROOT" > "$CM_BUILD_DIR/battery_vault/android/local.properties"
+          echo "flutter.versionName=1.0.0" >> "$CM_BUILD_DIR/battery_vault/android/local.properties"
+          echo "flutter.versionCode=1" >> "$CM_BUILD_DIR/battery_vault/android/local.properties"
 
       - name: Set up key.properties
         script: |
-          cat >> "$CM_BUILD_DIR/android/key.properties" <<KEYEOF
+          cat >> "$CM_BUILD_DIR/battery_vault/android/key.properties" <<KEYEOF
           storePassword=$CM_KEYSTORE_PASSWORD
           keyPassword=$CM_KEY_PASSWORD
           keyAlias=$CM_KEY_ALIAS
@@ -35,14 +36,16 @@ workflows:
           KEYEOF
 
       - name: Get Flutter packages
-        script: flutter pub get
+        script: |
+          cd battery_vault && flutter pub get
 
       - name: Generate localizations
-        script: flutter gen-l10n
+        script: |
+          cd battery_vault && flutter gen-l10n
 
       - name: Build APK Release
         script: |
-          flutter build apk --release --split-per-abi
+          cd battery_vault && flutter build apk --release --split-per-abi
 
     artifacts:
-      - build/app/outputs/flutter-apk/*.apk
+      - battery_vault/build/app/outputs/flutter-apk/*.apk
