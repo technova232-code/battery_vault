@@ -35,7 +35,7 @@ dependencies:
   google_fonts: ^6.2.1
 
   # Ads - Unity Ads
-  unity_ads_plugin: ^4.1.0
+  unity_ads_plugin: ^0.3.30
 
   # Utils
   shared_preferences: ^2.3.2
