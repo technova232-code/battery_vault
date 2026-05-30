@@ -3,7 +3,7 @@ import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class AdsService {
   // Replace with your Unity Ads Game ID
-  static const String _gameId = 'YOUR_UNITY_GAME_ID';
+  static const String _gameId = '800001883';
   static const String _bannerAdUnitId = 'Banner_Android';
   static const String _interstitialAdUnitId = 'Interstitial_Android';
   static const String _rewardedAdUnitId = 'Rewarded_Android';
